@@ -49,7 +49,7 @@ module.exports = {
       loader: 'react-hot!babel-loader'
     }, {
       test: /\.styl/,
-      loader: 'style-loader!css-loader!stylus-loader'
+      loader: 'style-loader!style-loader!css-loader?sourceMap!autoprefixer?browsers=last 2 version!stylus-loader'
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'

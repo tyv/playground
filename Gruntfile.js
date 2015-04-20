@@ -10,6 +10,7 @@ var webpackDistConfig = require('./webpack.dist.config.js'),
 module.exports = function (grunt) {
   // Let *load-grunt-tasks* require everything
   require('load-grunt-tasks')(grunt);
+  grunt.loadNpmTasks('grunt-preprocess');
 
   // Read configuration from package.json
   var pkgConfig = grunt.file.readJSON('package.json');
@@ -73,6 +74,22 @@ module.exports = function (grunt) {
       }
     },
 
+    preprocess: {
+      dist: {
+          flatten: true,
+          expand: true,
+          src: '<%= pkg.src %>/templates/*.html',
+          dest: '<%= pkg.dist %>/',
+      },
+
+      dev: {
+          flatten: true,
+          expand: true,
+          src: '<%= pkg.src %>/templates/*.html',
+          dest: '<%= pkg.src %>/',
+      }
+    },
+
     copy: {
       dist: {
         files: [
@@ -80,7 +97,7 @@ module.exports = function (grunt) {
           {
             flatten: true,
             expand: true,
-            src: ['<%= pkg.src %>/*'],
+            src: ['<%= pkg.src %>/*', '!<%= pkg.src %>/*.html'],
             dest: '<%= pkg.dist %>/',
             filter: 'isFile'
           },
@@ -99,11 +116,16 @@ module.exports = function (grunt) {
         files: [{
           dot: true,
           src: [
-            '<%= pkg.dist %>'
+            '<%= pkg.dist %>',
+            '<%= pkg.src %>/index.html'
           ]
         }]
       }
     }
+  });
+
+  grunt.registerTask('production', function (target) {
+    process.env.NODE_ENV = 'production';
   });
 
   grunt.registerTask('serve', function (target) {
@@ -113,13 +135,14 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'open:dev',
+      'preprocess:dev',
       'webpack-dev-server'
     ]);
   });
 
   grunt.registerTask('test', ['karma']);
 
-  grunt.registerTask('build', ['clean', 'copy', 'webpack']);
+  grunt.registerTask('build', ['production', 'clean', 'preprocess:dist', 'copy', 'webpack']);
 
   grunt.registerTask('default', []);
 };

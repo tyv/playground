@@ -6,7 +6,8 @@
 
 'use strict';
 
-var webpack = require('webpack');
+var webpack = require('webpack'),
+    ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 
@@ -18,7 +19,9 @@ module.exports = {
 
   debug: false,
   devtool: false,
-  entry: './src/components/main.js',
+  entry: {
+    js: './src/components/main.js'
+  },
 
   stats: {
     colors: true,
@@ -29,13 +32,14 @@ module.exports = {
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin()
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new ExtractTextPlugin('main.css', {allChunks: true})
   ],
 
   resolve: {
-    extensions: ['', '.js'],
+    extensions: ['', '.js', '.styl'],
     alias: {
-      'styles': __dirname + '/src/styles',
+      // 'styles': __dirname + '/src/styles',
       'mixins': __dirname + '/src/mixins',
       'components': __dirname + '/src/components/',
       'stores': __dirname + '/src/stores/',
@@ -54,13 +58,12 @@ module.exports = {
       test: /\.js$/,
       exclude: /node_modules/,
       loader: 'babel-loader'
-    }, {
-      test: /\.css$/,
-      loader: 'style-loader!css-loader'
-    }, {
-      test: /\.styl/,
-      loader: 'style-loader!stylus-loader!less-loader'
-    }, {
+    },
+    {
+        test:   /\.styl$/,
+        loader: ExtractTextPlugin.extract('style', 'css!autoprefixer?browsers=last 2 version!stylus?linenos=true')
+    },
+    {
       test: /\.(png|jpg)$/,
       loader: 'url-loader?limit=8192'
     }]
