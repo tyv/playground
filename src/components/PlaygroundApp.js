@@ -1,21 +1,13 @@
 'use strict';
 
-var React = require('react/addons');
-var ReactTransitionGroup = React.addons.TransitionGroup;
-
-// CSS
-// require('../styles/main.css');
-
-var imageURL = require('../images/yeoman.png');
+var React = require('react/addons'),
+    ReactTransitionGroup = React.addons.TransitionGroup;
 
 var PlaygroundApp = React.createClass({
+
   render: function() {
     return (
-      <div className='main'>
-        <ReactTransitionGroup transitionName="fade">
-          <img src={imageURL} />
-        </ReactTransitionGroup>
-      </div>
+      <div className='main'>sdsd</div>
     );
   }
 });
