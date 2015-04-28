@@ -1,17 +1,18 @@
 'use strict';
 
 var React = require('react/addons');
+var Reflux = require('reflux');
+
+var AppStore = require('stores/AppStore');
+
 var User = require('./User');
 var LoginForm = require('./LoginForm');
 
 var you = [{ id: '123', name: 'Yuri Tkachenko', }];
-var users = [
-        { muted: true, id: '123', isActiveSpeaker: false },
-        { muted: false, id: '1234', isActiveSpeaker: true },
-        { muted: false, id: '12345', isActiveSpeaker: false }
-    ];
 
 var PlaygroundApp = React.createClass({
+
+    mixins: [Reflux.connect(AppStore)],
 
     getInitialState: function() {
         return { users: [], logged: false };

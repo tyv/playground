@@ -3,8 +3,6 @@
 var PlaygroundApp = require('./PlaygroundApp'),
     React = require('react'),
 
-    AppStore = require('stores/AppStore'),
-
     Router = require('react-router'),
     Route = Router.Route;
 
