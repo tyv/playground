@@ -10,7 +10,17 @@ var User = React.createClass({
                             'user_active_' + this.props.activeSpeaker;
 
         return (
-          <div className={className}>{this.props.name}</div>
+          <li
+            className={className}
+            data-id={this.props.userId}
+            data-token={this.props.token}>
+
+                {this.props.author ?
+                    'You: ' + this.props.name :
+                    'User #' + this.props.userId
+                }
+
+          </li>
         );
     }
 });

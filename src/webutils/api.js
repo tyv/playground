@@ -129,19 +129,19 @@ var api = {
 
             } else {
 
-                socket = new WebSocket(currentSession.rtmUrl +  '/?token=' + currentSession.token);
+                socket = new WebSocket(
+                            currentSession.rtmUrl +
+                            '/?token=' +
+                            currentSession.token
+                        );
 
                 socket.onerror = function(e) {
                     reject(e);
                 };
 
                 socket.onopen = function(e) {
-                    resolve(this);
+                    resolve({ user: currentSession.user, ws: this });
                 };
-
-                // socket.onmessage = function(e) {
-                //     console.log(e)
-                // };
             }
         });
 

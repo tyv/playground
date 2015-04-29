@@ -8,28 +8,45 @@ var AppStore = require('stores/AppStore');
 var User = require('./User');
 var LoginForm = require('./LoginForm');
 
-var you = [{ id: '123', name: 'Yuri Tkachenko', }];
-
 var PlaygroundApp = React.createClass({
 
     mixins: [Reflux.connect(AppStore)],
 
     getInitialState: function() {
-        return { users: [], logged: false };
+        return {
+            logged: false
+        };
     },
 
     render: function() {
-        var result;
+        var result, users;
+
 
         if (this.state.logged) {
-            result = (<div className='chatroom'>
-                {this.state.users.map(function(user) {
-                    return <User
-                        muted={user.muted}
-                        name={user.id}
-                        activeSpeaker={user.isActiveSpeaker}/>;
-                })}
-              </div>);
+            users = this.state.users || {};
+
+            result = (
+                    <div className='chatroom'>
+                        <ul className="users">
+                            <User
+                                author={true}
+                                muted={this.state.you.muted}
+                                name={this.state.you.name}
+                                activeSpeaker={this.state.you.isActiveSpeaker}
+                                userId={this.state.you.id}
+                                token={this.state.you.token} />
+
+                            {Object.keys(users).map(function(id) {
+
+                                return <User
+                                    muted={users[id].muted}
+                                    name={users[id].id}
+                                    activeSpeaker={users[id].isActiveSpeaker}
+                                    userId={users[id].id}/>;
+                            })}
+                        </ul>
+                  </div>
+              );
         } else {
             result = (
                 <div className="login">
