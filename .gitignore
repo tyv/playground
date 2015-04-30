@@ -29,6 +29,5 @@ $RECYCLE.BIN/
 
 node_modules/
 .tmp
-dist
 /src/main.js
 /src/index.html
