@@ -11,6 +11,7 @@ module.exports = function (grunt) {
   // Let *load-grunt-tasks* require everything
   require('load-grunt-tasks')(grunt);
   grunt.loadNpmTasks('grunt-preprocess');
+  grunt.loadNpmTasks('grunt-jsdox');
 
   // Read configuration from package.json
   var pkgConfig = grunt.file.readJSON('package.json');
@@ -121,6 +122,17 @@ module.exports = function (grunt) {
           ]
         }]
       }
+    },
+
+    jsdox: {
+      generate: {
+        options: {
+          contentsTitle: pkgConfig.name
+        },
+
+        src: ['<%= pkg.src %>/webutils/*.js'],
+        dest: '<%= pkg.dist %>/docs/'
+      }
     }
   });
 
@@ -142,7 +154,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', ['karma']);
 
-  grunt.registerTask('build', ['production', 'clean', 'preprocess:dist', 'copy', 'webpack']);
+  grunt.registerTask('build', ['production', 'clean', 'jsdox', 'preprocess:dist', 'copy', 'webpack']);
 
   grunt.registerTask('default', []);
 };

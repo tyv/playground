@@ -6,16 +6,16 @@ var currentSession,
 var api = {
 
     /**
-    If current session: Open WebSoket connection,
-    create new session and open WebSoket if not
-    @public
-    @async
-    @param {Object} settings - user data object
-    @param {String} settings.login - user login
-    @param {String} settings.password - user password
-    @param {Number} settings.attempts - number of xhr retry
-    @param {Number} settings.timeout -  xhr timeout in ms
-    @return {Object} Promise
+     * If current session: Open WebSoket connection,
+     * create new session and open WebSoket if not
+     * @public
+     * @async
+     * @param {Object} settings - user data object
+     * @param {String} settings.login - user login
+     * @param {String} settings.password - user password
+     * @param {Number} settings.attempts - number of xhr retry
+     * @param {Number} settings.timeout -  xhr timeout in ms
+     * @return {Object} Promise
      */
     connect: function(settings) {
 
