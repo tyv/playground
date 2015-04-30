@@ -6,8 +6,8 @@ var AppActions = require('actions/AppActionCreators');
 var LoginForm = React.createClass({
     getInitialState: function() {
         return {
-            login: '',
-            password: ''
+            login: 'a',
+            password: 'a'
         };
     },
 
@@ -18,7 +18,8 @@ var LoginForm = React.createClass({
                     <input
                         onChange={this.onChange}
                         placeholder="username"
-                        value={this.state.login}/>
+                        value={this.state.login}
+                        autofocus={true}/>
                 </div>
                 <div>
                     <input

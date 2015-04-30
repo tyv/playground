@@ -56,7 +56,7 @@ var api = {
 
         return this.toggleStatus({
             id: id,
-            isMuted: false
+            muted: false
         });
 
     },
@@ -71,7 +71,7 @@ var api = {
 
         return this.toggleStatus({
             id: id,
-            isMuted: true
+            muted: true
         });
 
     },
@@ -90,17 +90,20 @@ var api = {
 
     _toggleHandler: function(settings, resolve, reject) {
 
-        var url = config[settings.isMuted ? 'unmute' : 'mute'] + '/' + settings.id,
-            xhr = this._getXHR(
-                        'post',
-                        url,
-                        resolve,
-                        reject
-                    );
+        var url = config[settings.muted ? 'unmute' : 'mute'] + '/' + settings.id;
 
-        xhr.send(JSON.stringify(settings));
+        if (!currentSession) {
+            return reject('No Session');
+        }
 
-        return xhr;
+        return this._getXHR(
+            'put',
+            url,
+            JSON.stringify({ token: currentSession.token }),
+            resolve,
+            reject,
+            settings.attempts
+        );
 
     },
 
@@ -109,11 +112,11 @@ var api = {
         var xhr = this._getXHR(
                         'post',
                         config.create,
+                        JSON.stringify(settings),
                         resolve,
-                        reject
+                        reject,
+                        settings.attempts
                     );
-
-        xhr.send(JSON.stringify(settings));
 
         return xhr;
     },
@@ -147,35 +150,67 @@ var api = {
 
     },
 
-    _getXHR: function (method, url, resolve, reject) {
+    _getXHR: function (method, url, data, resolve, reject, retries) {
 
-        var xhr = new XMLHttpRequest();
+        var xhr,
+            attempts = retries || config.attempts;
 
-        xhr.timeout = config.timout || 0;
+        function getXHR() {
+            console.log('attempts', attempts);
 
-        xhr.open(method.toUpperCase(), url);
-        xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr = new XMLHttpRequest();
 
-        xhr.onload = function() {
+            xhr.timeout = config.timout || 0;
 
-            this.status == 200 ?
-                resolve(JSON.parse(this.response)) :
-                reject(this.statusText);
-        };
+            xhr.open(method.toUpperCase(), url);
+            xhr.setRequestHeader('Content-Type', 'application/json');
 
-        xhr.ontimeout = function() {
-            reject('Timeout in ' + this.config.timeout + 'ms reached' );
-        };
+            xhr.onload = function() {
 
-        xhr.onerror = function(e) {
-            reject(new Error(this.statusText || 'Request error'));
-        };
+                var res;
 
-        xhr.onabort = function() {
-            reject(new Error('Request aborted'));
-        };
+                try {
+                    res = JSON.parse(this.response);
+                } catch(e) {
+                    res = this.response;
+                }
 
-        return xhr;
+                if (this.status === 200 && res.status === 'ok') {
+
+                    resolve(res);
+
+                } else {
+
+                    attempts--;
+                    if (attempts <= 0) {
+
+                        reject(new Error(res.error || this.statusText || 'Request error') );
+
+                    } else {
+                        console.log('RETRY');
+                        getXHR();
+                    }
+                }
+            };
+
+            xhr.ontimeout = function() {
+                reject('Timeout in ' + this.config.timeout + 'ms reached' );
+            };
+
+            xhr.onerror = function(e) {
+                reject(new Error(this.statusText || 'Request error'));
+            };
+
+            xhr.onabort = function() {
+                reject(new Error('Request aborted'));
+            };
+
+            xhr.send(data);
+
+            return xhr;
+        }
+
+        return getXHR();
     }
 };
 

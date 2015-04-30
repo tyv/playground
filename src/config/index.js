@@ -10,8 +10,9 @@ module.exports = {
     session: session,
 
     create: session + '/join',
-    mute: session + '/mute',
-    unmute: session + '/unmute',
+    mute: api + '/mute',
+    unmute: api + '/unmute',
 
-    timeout: 5000
+    timeout: 5000,
+    attempts: 5
 };
