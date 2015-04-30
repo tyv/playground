@@ -6,10 +6,16 @@ var currentSession,
 var api = {
 
     /**
-     * Open WebSoket connection
-     * @public
-     * @param {??}
-     * @return {Object} WebSoket instance
+    If current session: Open WebSoket connection,
+    create new session and open WebSoket if not
+    @public
+    @async
+    @param {Object} settings - user data object
+    @param {String} settings.login - user login
+    @param {String} settings.password - user password
+    @param {Number} settings.attempts - number of xhr retry
+    @param {Number} settings.timeout -  xhr timeout in ms
+    @return {Object} Promise
      */
     connect: function(settings) {
 
@@ -18,23 +24,15 @@ var api = {
             this.createSession(settings).then(this._getWS);
     },
 
-
-    _saveSession: function(response) {
-        currentSession = undefined;
-
-        if (response && response.status === 'ok') {
-            currentSession = response.payload;
-        }
-
-        return currentSession;
-    },
-
     /**
-     * Send XHR to create new session
+     * Send XHR to create new session and save session
      * @public
+     * @async
      * @param {Object} settings - user data object
      * @param {String} settings.login - user login
      * @param {String} settings.password - user password
+     * @param {Number} settings.attempts - number of xhr retry
+     * @param {Number} settings.timeout -  xhr timeout in ms
      * @return {Object} Promise
      */
     createSession: function(settings) {
@@ -49,8 +47,9 @@ var api = {
     /**
      * Send XHR to mute user by ID
      * @public
-     * @param {String} ID - user ID
-     * @return {Object} Promise - run this.toggleStatus that returns Promise
+     * @async
+     * @param {String|Number} ID - user ID
+     * @return {Object} Promise
      */
     mute: function(id) {
 
@@ -64,8 +63,9 @@ var api = {
     /**
      * Send XHR to unmute user by ID
      * @public
-     * @param {String} ID - user ID
-     * @return {Object} Promise - run this.toggleStatus that returns Promise
+     * @async
+     * @param {String|Number} ID - user ID
+     * @return {Object} Promise
      */
     unmute: function(id) {
 
@@ -79,15 +79,45 @@ var api = {
     /**
      * Send XHR to toggle mute status
      * @public
+     * @async
      * @param {Object} settings - user data object
-     * @param {String} settings.id - user id
+     * @param {String|Number} settings.id - user id
      * @param {Boolean} settings.status - user current status
+     * @param {Number} settings.attempts - number of xhr retry
+     * @param {Number} settings.timeout -  xhr timeout in ms
      * @return {Object} Promise
      */
     toggleStatus: function(settings) {
         return new Promise(this._toggleHandler.bind(this, settings));
     },
 
+    /**
+     * Save current session in closure
+     * @private
+     * @param  {Object} response API response object from session/join post method
+     * @return {Object} Current session
+     */
+    _saveSession: function(response) {
+
+        currentSession = undefined;
+
+        if (response && response.status === 'ok') {
+            currentSession = response.payload;
+        }
+
+        return currentSession;
+    },
+
+    /**
+     * Configure and return XHR for toggle mute status
+     * @private
+     * @param {Object} settings - user data object
+     * @param {String|Number} settings.id - user id
+     * @param {Boolean} settings.status - user current status
+     * @param  {Function} resolve  Resolve handler
+     * @param  {Function} reject   Reject handler
+     * @return {Object}          XHR
+     */
     _toggleHandler: function(settings, resolve, reject) {
 
         var url = config[settings.muted ? 'unmute' : 'mute'] + '/' + settings.id;
@@ -102,11 +132,24 @@ var api = {
             JSON.stringify({ token: currentSession.token }),
             resolve,
             reject,
-            settings.attempts
+            settings.attempts,
+            settings.timeout
         );
 
     },
 
+    /**
+     * Configure and return XHR for create session
+     * @private
+     * @param {Object} settings - user data object
+     * @param {String} settings.login - user login
+     * @param {String} settings.password - user password
+     * @param {Number} settings.attempts - number of xhr retry
+     * @param {Number} settings.timeout -  xhr timeout in ms
+     * @param  {Function} resolve  Resolve handler
+     * @param  {Function} reject   Reject handler
+     * @return {Object}          XHR
+     */
     _createHandler: function(settings, resolve, reject) {
 
         var xhr = this._getXHR(
@@ -115,12 +158,19 @@ var api = {
                         JSON.stringify(settings),
                         resolve,
                         reject,
-                        settings.attempts
+                        settings.attempts,
+                        settings.timeout
                     );
 
         return xhr;
     },
 
+    /**
+     * Return new WebSoket Connection
+     * @async
+     * @private
+     * @return {Object} Promise
+     */
     _getWS: function() {
 
         return new Promise(function(resolve, reject) {
@@ -150,7 +200,21 @@ var api = {
 
     },
 
-    _getXHR: function (method, url, data, resolve, reject, retries) {
+    /**
+     * Create and return new XHR object with attached event handlers,
+     * sends data, handle retries, attach resolve and reject handlers.
+     * @private
+     * @async
+     * @param  {String} method  XHR method
+     * @param  {String} url     XHR url
+     * @param  {String} data    JSON data for sending as string
+     * @param  {Function} resolve Resolve handler
+     * @param  {Function} reject  Reject handler
+     * @param  {Number} attempts number of XHR retry
+     * @param  {Number} timeout XHR timeout
+     * @return {Object}         XHR instance
+     */
+    _getXHR: function (method, url, data, resolve, reject, retries, timeout) {
 
         var xhr,
             attempts = retries || config.attempts;
@@ -160,7 +224,7 @@ var api = {
 
             xhr = new XMLHttpRequest();
 
-            xhr.timeout = config.timout || 0;
+            xhr.timeout = timeout || config.timout || 0;
 
             xhr.open(method.toUpperCase(), url);
             xhr.setRequestHeader('Content-Type', 'application/json');
