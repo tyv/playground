@@ -11,10 +11,14 @@ var api = {
      * @public
      * @async
      * @param {Object} settings - user data object
-     * @param {String} settings.login - user login
-     * @param {String} settings.password - user password
-     * @param {Number} settings.attempts - number of xhr retry
-     * @param {Number} settings.timeout -  xhr timeout in ms
+     * ```js
+     * {
+     *     login: {String},
+     *     password: {String},
+     *     attempts: {Number}, // optional, number of XHR retries
+     *     timeout: {Number} // optional, XHR timeout in ms
+     * }
+     * ```
      * @return {Object} Promise
      */
     connect: function(settings) {
@@ -29,10 +33,14 @@ var api = {
      * @public
      * @async
      * @param {Object} settings - user data object
-     * @param {String} settings.login - user login
-     * @param {String} settings.password - user password
-     * @param {Number} settings.attempts - number of xhr retry
-     * @param {Number} settings.timeout -  xhr timeout in ms
+     * ```js
+     * {
+     *     login: {String},
+     *     password: {String},
+     *     attempts: {Number}, // optional, number of XHR retries
+     *     timeout: {Number} // optional, XHR timeout in ms
+     * }
+     * ```
      * @return {Object} Promise
      */
     createSession: function(settings) {
@@ -48,7 +56,7 @@ var api = {
      * Send XHR to mute user by ID
      * @public
      * @async
-     * @param {String|Number} ID - user ID
+     * @param {String|Number} id - user ID
      * @return {Object} Promise
      */
     mute: function(id) {
@@ -64,7 +72,7 @@ var api = {
      * Send XHR to unmute user by ID
      * @public
      * @async
-     * @param {String|Number} ID - user ID
+     * @param {String|Number} id - user ID
      * @return {Object} Promise
      */
     unmute: function(id) {
@@ -81,10 +89,14 @@ var api = {
      * @public
      * @async
      * @param {Object} settings - user data object
-     * @param {String|Number} settings.id - user id
-     * @param {Boolean} settings.status - user current status
-     * @param {Number} settings.attempts - number of xhr retry
-     * @param {Number} settings.timeout -  xhr timeout in ms
+     * ```js
+     * {
+     *     id: {String|Number},
+     *     muted: {Boolean},
+     *     attempts: {Number}, // optional, number of XHR retries
+     *     timeout: {Number} // optional, XHR timeout in ms
+     * }
+     * ```
      * @return {Object} Promise
      */
     toggleStatus: function(settings) {
@@ -112,10 +124,16 @@ var api = {
      * Configure and return XHR for toggle mute status
      * @private
      * @param {Object} settings - user data object
-     * @param {String|Number} settings.id - user id
-     * @param {Boolean} settings.status - user current status
-     * @param  {Function} resolve  Resolve handler
-     * @param  {Function} reject   Reject handler
+     * ```js
+     * {
+     *     id: {String|Number},
+     *     muted: {Boolean},
+     *     attempts: {Number}, // optional, number of XHR retries
+     *     timeout: {Number} // optional, XHR timeout in ms
+     * }
+     * ```
+     * @param {Function} resolve - Resolve handler
+     * @param {Function} reject - Reject handler
      * @return {Object}          XHR
      */
     _toggleHandler: function(settings, resolve, reject) {
@@ -142,12 +160,16 @@ var api = {
      * Configure and return XHR for create session
      * @private
      * @param {Object} settings - user data object
-     * @param {String} settings.login - user login
-     * @param {String} settings.password - user password
-     * @param {Number} settings.attempts - number of xhr retry
-     * @param {Number} settings.timeout -  xhr timeout in ms
-     * @param  {Function} resolve  Resolve handler
-     * @param  {Function} reject   Reject handler
+     * ```js
+     * {
+     *     login: {String},
+     *     password: {String},
+     *     attempts: {Number}, // optional, number of XHR retries
+     *     timeout: {Number} // optional, XHR timeout in ms
+     * }
+     * ```
+     * @param {Function} resolve - Resolve handler
+     * @param {Function} reject - Reject handler
      * @return {Object}          XHR
      */
     _createHandler: function(settings, resolve, reject) {
