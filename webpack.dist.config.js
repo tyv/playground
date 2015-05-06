@@ -66,8 +66,8 @@ module.exports = {
         loader: ExtractTextPlugin.extract('style', 'css!autoprefixer?browsers=last 2 version!stylus?linenos=true')
     },
     {
-      test: /\.(png|jpg)$/,
-      loader: 'url-loader?limit=8192'
+      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+      loader: 'url-loader?limit=100000'
     }]
   }
 };

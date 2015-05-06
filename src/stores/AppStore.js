@@ -28,8 +28,11 @@ var AppStore = Reflux.createStore({
     },
 
     _onToggleSucces: function(id) {
-        this._users[id].muted = !this._users[id].muted;
-        this.trigger({users: this._users});
+        var user = this._users[id] || this._user.you;
+
+        user.muted = !user.muted;
+
+        this.trigger(this._users[id] ? {users: this._users} : { you: this._user.you });
     },
 
     _onConnectSuccess: function(response) {
