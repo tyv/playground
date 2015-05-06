@@ -1,7 +1,7 @@
 # API playground with React and Reflux
 
 * Result builded via Grunt + Webpack available at ```./dist/```
-* [./dist/docs/readme.md](API docs: generated from JSDoc)
+* [API docs: generated from JSDoc](./dist/docs/readme.md)
 
 ## Dev server
 ```bash
