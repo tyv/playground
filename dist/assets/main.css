@@ -1,1 +1,1 @@
-body{background:#ddd}.user_active_true{background:red}
+body{background:#ddd}.user_active_true{background:red}.user_muted_false .button:before{content:'mute'}.user_muted_true .button:before{content:'unmute'}

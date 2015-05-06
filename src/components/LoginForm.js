@@ -6,29 +6,43 @@ var AppActions = require('actions/AppActionCreators');
 var LoginForm = React.createClass({
     getInitialState: function() {
         return {
-            login: 'a',
-            password: 'a'
+            login: '',
+            password: ''
         };
     },
 
     render: function() {
         return (
-            <form action="" onSubmit={this.onSubmit}>
-                <div>
-                    <input
-                        onChange={this.onChange}
-                        placeholder="username"
-                        value={this.state.login}
-                        autofocus={true}/>
+            <form className="login" action="" onSubmit={this.onSubmit}>
+
+                <div className="input-group input-group-lg login__line">
+                  <span className="input-group-addon" id="sizing-addon1">
+                        <span className="glyphicon glyphicon-user" aria-hidden="true"></span>
+                  </span>
+                  <input
+                    onChange={this.onChange}
+                    value={this.state.login}
+                    autoFocus
+                    type="text"
+                    className="form-control"
+                    placeholder="Username"/>
                 </div>
-                <div>
-                    <input
-                        onChange={this.onChange}
-                        type="password"
-                        placeholder="password"
-                        value={this.state.password}/>
+
+                <div className="input-group input-group-lg login__line">
+                  <span className="input-group-addon" id="sizing-addon1">
+                        <span className="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                  </span>
+                  <input
+                    onChange={this.onChange}
+                    value={this.state.password}
+                    type="password"
+                    className="form-control"
+                    placeholder="Password"/>
                 </div>
-                <button type="submit">Login me</button>
+
+                <div className="login__line">
+                    <button className="btn btn-lg btn-primary" type="submit">Login me</button>
+                </div>
             </form>
         );
     },

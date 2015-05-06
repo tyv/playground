@@ -1,5 +1,5 @@
 {
-  "name": "API example",
+  "name": "api-example",
   "version": "0.0.1",
   "description": "",
   "repository": "",
@@ -13,7 +13,8 @@
     "lodash": "^3.7.0",
     "react": "~0.12.2",
     "react-router": "^0.11.6",
-    "reflux": "^0.2.7"
+    "reflux": "^0.2.7",
+    "bootstrap": "*"
   },
   "devDependencies": {
     "autoprefixer-loader": "^1.2.0",
@@ -40,10 +41,11 @@
     "karma-script-launcher": "~0.1.0",
     "karma-webpack": "~1.2.2",
     "load-grunt-tasks": "~0.6.0",
+    "raw-loader": "^0.5.1",
     "react-hot-loader": "^1.0.7",
     "style-loader": "~0.8.0",
     "stylus-loader": "^0.5.0",
-    "url-loader": "~0.5.5",
+    "url-loader": "^0.5.5",
     "webpack": "~1.4.3",
     "webpack-dev-server": "~1.6.5"
   }

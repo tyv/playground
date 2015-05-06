@@ -27,6 +27,10 @@ var PlaygroundApp = React.createClass({
 
             result = (
                     <div className='chatroom'>
+
+                        <input type="checkbox" className="hide__cb" id="hide-muted"/>
+                        <label className="hide__l" htmlFor="hide-muted">Hide muted users</label>
+
                         <ul className="users">
                             <User
                                 author={true}
